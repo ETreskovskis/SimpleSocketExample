@@ -7,7 +7,7 @@ BUFFER_SIZE = 1024
 
 
 class ClientUser:
-    def __init__(self, ip, port, name):
+    def __init__(self, ip: str, port: int, name: str):
         self.ip = ip
         self.port = port
         self.nick_name = name
@@ -31,11 +31,14 @@ class ClientUser:
             except Exception as er:
                 print(er.args[0])
                 self.sock.close()
-                return
 
     def send_data(self):
         while True:
             message = f"{self.nick_name}: {input('')}"
+            if message.split(":")[-1].strip() == "!quit":
+                self.sock.send(message.encode("utf-8"))
+                self.sock.close()
+
             self.sock.send(message.encode("utf-8"))
 
     def main_threads(self):
