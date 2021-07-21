@@ -50,6 +50,7 @@ class ClientUser:
 if __name__ == "__main__":
     user_name = ClientUser.get_name()
     user = ClientUser(ip=HOST, port=PORT, name=user_name)
+    user.connect()
     user.main_threads()
 
 
