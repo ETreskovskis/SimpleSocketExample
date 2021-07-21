@@ -46,7 +46,7 @@ class ChatServer:
                 message = client.recv(BUFFER_SIZE)
                 self.broadcast_info(message)
             except Exception as er:
-                print(er)
+                print(er.args[0])
             finally:
                 self.remove_client(client)
                 return
