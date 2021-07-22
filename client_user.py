@@ -1,9 +1,6 @@
 import socket
 import threading
-
-HOST = "localhost"
-PORT = 55555
-BUFFER_SIZE = 1024
+from utils import Config
 
 
 class ClientUser:
@@ -23,13 +20,13 @@ class ClientUser:
     def receive_data(self):
         while True:
             try:
-                message = self.sock.recv(BUFFER_SIZE).decode("utf-8")
+                message = self.sock.recv(Config.BUFFER_SIZE).decode("utf-8")
                 if message == "name":
                     self.sock.send(self.nick_name.encode("utf-8"))
                 else:
                     print(message)
-            except ConnectionError as er:
-                print(er.args[0])
+            except Exception as er:
+                print(er.args[0], er.args[1])
                 self.sock.close()
                 return
 
@@ -55,8 +52,6 @@ class ClientUser:
 
 if __name__ == "__main__":
     user_name = ClientUser.get_name()
-    user = ClientUser(ip=HOST, port=PORT, name=user_name)
+    user = ClientUser(ip=Config.HOST, port=Config.PORT, name=user_name)
     user.connect()
     user.main_threads()
-
-

@@ -1,9 +1,6 @@
 import socket
 import threading
-
-HOST = "localhost"
-PORT = 55555
-BUFFER_SIZE = 1024
+from utils import Config, Logger
 
 
 class ChatServer:
@@ -36,10 +33,12 @@ class ChatServer:
     def handle_client(self, client):
         while True:
             try:
-                message = client.recv(BUFFER_SIZE)
+                message = client.recv(Config.BUFFER_SIZE)
+                if message:
+                    Logger.info(message.decode("utf-8"))
                 self.broadcast_info(message)
             except Exception as er:
-                print(er)
+                Logger.error(er.args[0])
                 self.remove_client(client)
                 return
 
@@ -49,9 +48,12 @@ class ChatServer:
         while True:
             print(f"Starting server and listening to {self.ip}:{self.port}")
             client, address = self.sock.accept()
+            Logger.info(f"Connection established with {str(address)}")
             print(f"Connection established with {str(address)}")
             client.send(self.ask_name.encode("utf-8"))
-            client_name = client.recv(BUFFER_SIZE)
+            client_name = client.recv(Config.BUFFER_SIZE)
+
+            Logger.info(f"New user: {address}, nickname: {client_name}")
             self.clients.append((client, client_name))
             msg = self.welcome_msg.format(client_name).encode("utf-8")
             self.broadcast_info(message=msg)
@@ -62,5 +64,6 @@ class ChatServer:
 
 
 if __name__ == "__main__":
-    server = ChatServer(HOST, PORT)
+    Logger(filename="server_logger")
+    server = ChatServer(Config.HOST, Config.PORT)
     server.main_loop()
