@@ -32,7 +32,6 @@ class Logger:
 
     def __init__(self, filename, file_level=LogLvl.INFO, console_level=LogLvl.INFO, mode='w'):
         self.filename = ''.join([self.suffix, "_", filename, ".txt"])
-        # self.logging_path = os.sep.join([__DEFAULT_PATH__["logger_path"], self.filename])
         self.logging_path = os.sep.join([self.root_dir, self.filename])
         # Creating logger
         self.__class__._logger = logging.getLogger("Logging")
