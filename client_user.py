@@ -34,6 +34,7 @@ class ClientUser:
         while True:
             message = f"{self.nick_name}: {input('')}"
             if message.split(":")[-1].strip() == "!quit":
+                self.sock.send(message.encode("utf-8"))
                 self.sock.shutdown(socket.SHUT_RDWR)
                 self.sock.close()
                 return

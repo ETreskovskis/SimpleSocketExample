@@ -26,8 +26,9 @@ class ChatServer:
             if client in clients:
                 self.clients.pop(num)
                 _, name = clients
-                msg = f"Client >> {name.decode('utf-8')} has lef the chat room...".encode("utf-8")
-                self.broadcast_info(msg)
+                msg = f"Client >> {name.decode('utf-8')} has lef the chat room..."
+                Logger.info(msg)
+                self.broadcast_info(msg.encode("utf-8"))
                 client.close()
 
     def handle_client(self, client):
@@ -36,6 +37,11 @@ class ChatServer:
                 message = client.recv(Config.BUFFER_SIZE)
                 if message:
                     Logger.info(message.decode("utf-8"))
+                elif message and message.decode("utf-8").split(":")[-1].strip() == "!quit":
+                    print(message)
+                    print(message.decode("utf-8").split(":")[-1].strip())
+                    self.remove_client(client)
+
                 self.broadcast_info(message)
             except Exception as er:
                 Logger.error(er.args[0])
